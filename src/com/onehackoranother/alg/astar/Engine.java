@@ -25,49 +25,59 @@ public class Engine<T> {
     public void setHeuristic(Heuristic<T> h) {
         heuristic = h;
     }
-
-    public void calculate(T start, T goal) {
+    
+    public Result<T> calculate(T start, T goal) {
+        return doAStar(start, goal, true);
+    }
+    
+    public Path<T> calculatePath(T start, T goal) {
+        return doAStar(start, goal, true).path;
+    }
+    
+    public float calculateCost(T start, T goal) {
+        return doAStar(start, goal, false).cost;
+    }
+    
+    private Result<T> doAStar(T start, T goal, boolean returnPath) {
 
         storage.reset(map);
-        storage.addToOpenSet(start, 0.0f,
-                heuristic.estimateDistance(start, goal));
+        storage.addToOpenSet(start, 0.0f, heuristic.estimateDistance(start, goal), null);
 
         while (storage.hasOpenNodes()) {
             T curr = storage.removeBestOpenNode();
             if (curr == goal) {
-                // done, calculate path
+                return storage.resultTo(goal, returnPath);
             } else {
                 storage.addToClosedSet(curr);
 
                 int neighbourIx = 0;
                 Iterator<T> neighbours = map.getNeighbourIterator(curr);
                 while (neighbours.hasNext()) {
+                    
                     T neighbour = neighbours.next();
                     if (storage.isInClosedSet(neighbour)) {
                         continue;
                     }
 
-                    float tentativeG = storage.g(curr)
-                            + map.distance(curr, neighbour, neighbourIx);
-                    boolean tentativeIsBetter = true;
-
+                    float gScore = storage.g(curr) + map.distance(curr, neighbour, neighbourIx);
+                    
                     if (!storage.isInOpenSet(neighbour)) {
-                        storage.addToOpenSet(neighbour,
-                                heuristic.estimateDistance(neighbour, goal));
-                    } else if (tentativeG > storage.g(neighbour)) {
-                        tentativeIsBetter = false;
-                    }
-
-                    if (tentativeIsBetter) {
-                        // set neighbour's parent to current
-                        // set neighbour's g to tentative g
-                        // set neighbour's f to g + h
+                        storage.addToOpenSet(
+                                neighbour,
+                                gScore,
+                                heuristic.estimateDistance(neighbour, goal),
+                                curr
+                                );
+                    } else {
+                        storage.updateG(neighbour, gScore, curr);
                     }
 
                     ++neighbourIx;
                 }
             }
         }
+        
+        return null;
 
     }
 }
