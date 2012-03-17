@@ -15,7 +15,6 @@ public class DefaultStorage<T> implements Storage<T> {
         float f, g, h;
         
         public T getNode() { return node; }
-        public boolean hasNext() { return linked != null; }
         public Path<T> nextPathEntry() { return linked; }
     }
 
