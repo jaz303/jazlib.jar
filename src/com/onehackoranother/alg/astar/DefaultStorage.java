@@ -99,11 +99,13 @@ public class DefaultStorage<T> implements Storage<T> {
     public void updateG(T node, float g, T parent) {
         Score s = scores.get(node);
         if (g < s.g) {
+            openSet.remove(s);
             s.g = g;
             s.f = s.g + s.h;
             Score p = scores.get(parent);
-            p.linked = p;
-            p.steps = p.steps + 1;
+            s.linked = p;
+            s.steps = p.steps + 1;
+            openSet.add(s);
         }
     }
     
