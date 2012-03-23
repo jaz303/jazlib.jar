@@ -1,11 +1,13 @@
 package com.onehackoranother.responsecurve;
 
-public class ClampInResponseCurve implements ResponseCurve {
-    private final ResponseCurve clamped;
+import com.onehackoranother.math.FloatFunction;
+
+public class ClampInResponseCurve implements FloatFunction {
+    private final FloatFunction clamped;
     private final float min;
     private final float max;
     
-    public ClampInResponseCurve(ResponseCurve clamped, float min, float max) {
+    public ClampInResponseCurve(FloatFunction clamped, float min, float max) {
         this.clamped = clamped;
         this.min = min;
         this.max = max;

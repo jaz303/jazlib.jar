@@ -1,6 +1,8 @@
 package com.onehackoranother.responsecurve;
 
-public class LinearResponseCurve implements ResponseCurve {
+import com.onehackoranother.math.FloatFunction;
+
+public class LinearResponseCurve implements FloatFunction {
     private float x, y, m;
     
     public LinearResponseCurve(float x1, float y1, float x2, float y2) {

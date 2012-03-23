@@ -1,20 +1,22 @@
 package com.onehackoranother.responsecurve;
 
+import com.onehackoranother.math.FloatFunction;
+
 // Based on the 'The Beauty of Response Curves' by Bob Alexander
 // As found in AI Game Programming Wisdom (vol. 1)
-public class ArrayResponseCurve implements ResponseCurve {
+public class ArrayResponseCurve implements FloatFunction {
     
     private float       min;
     private float[]     samples;
     private float       step;
     
-    public ArrayResponseCurve(float min, float max, int numSamples, FloatSampler sampler) {
+    public ArrayResponseCurve(float min, float max, int numSamples, FloatFunction sampler) {
         this.min    = min;
         samples     = new float[numSamples];
         step        = (max - min) / numSamples;
         
         for (int i = 0; i < numSamples; i++) {
-            samples[i] = sampler.sample(min + (i * step));
+            samples[i] = sampler.value(min + (i * step));
         }
     }
     
