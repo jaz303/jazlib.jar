@@ -1,6 +1,7 @@
 package com.onehackoranother.math;
 
 public class Vec2f {
+    
     public float x;
     public float y;
     
@@ -23,13 +24,20 @@ public class Vec2f {
     // Non-destructive
     
     public Vec2f add(Vec2f r) { return new Vec2f(x + r.x, y + r.y); }
+    public Vec2f add(Vec2f r, float scale) { return new Vec2f(x + r.x * scale, y + r.y * scale); }
     public Vec2f sub(Vec2f r) { return new Vec2f(x - r.x, y - r.y); }
     public Vec2f mul(float r) { return new Vec2f(x * r, y * r); }
+    public Vec2f mul(Vec2f r) { return new Vec2f(x * r.x, y * r.y); }
     public Vec2f div(float r) { return new Vec2f(x / r, y / r); }
+    public Vec2f invert() { return new Vec2f(-x, -y); }
     
     public Vec2f normalise() {
         float m = magnitude();
-        return new Vec2f(x / m, y / m);
+        if (m > 0) {
+            return new Vec2f(x / m, y / m);
+        } else {
+            return this;
+        }
     }
     
     public Vec2f limit(float max) {
@@ -45,25 +53,28 @@ public class Vec2f {
     //
     // Destructive
     
-    public Vec2f _add(Vec2f r) { x += r.x; y += r.y; return this; }
-    public Vec2f _sub(Vec2f r) { x -= r.x; y -= r.y; return this; }
-    public Vec2f _mul(float r) { x *= r; y *= r; return this; }
-    public Vec2f _div(float r) { x /= r; y /= r; return this; }
+    public void _add(Vec2f r) { x += r.x; y += r.y; }
+    public void _add(Vec2f r, float scale) { x += r.x * scale; y += r.y * scale; }
+    public void _sub(Vec2f r) { x -= r.x; y -= r.y; }
+    public void _mul(float r) { x *= r; y *= r; }
+    public void _mul(Vec2f r) { x *= r.x; y *= r.y; }
+    public void _div(float r) { x /= r; y /= r; }
+    public void _invert() { x = -x; y = -y; }
     
-    public Vec2f _normalise() {
+    public void _normalise() {
         float m = magnitude();
-        x /= m; y /= m;
-        return this;
+        if (m > 0) {
+            x /= m; y /= m;
+        }
     }
     
-    public Vec2f _limit(float max) {
+    public void _limit(float max) {
         float m = magnitude();
         if (m > max) {
             float div = m / max;
             x /= div;
             y /= div;
         }
-        return this;
     }
     
     //
@@ -92,6 +103,4 @@ public class Vec2f {
     public String toString() {
         return "<" + x + "," + y + ">";
     }
-    
-    // angle
 }
